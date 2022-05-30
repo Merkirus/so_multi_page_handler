@@ -12,7 +12,9 @@ public:
 	~FIFO() = default;
 	void run(int n);
 	void runDyn(int n);
+	void runWSS(int n);
 private:
+	std::vector<std::vector<unsigned>> makeWSS();
 	Pamiec pamiec;
 	ProcessJoiner proces;
 };

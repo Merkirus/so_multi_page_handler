@@ -151,11 +151,11 @@ void Pamiec::przydzialRowny()
 			++index;
 		}
 	});
-	for (int i = 0; i < reszta; ++i)
-	{
-		ramki.at(index).setWlasciciel(procesy.at(procesy.size()-1).getId());
-		++index;
-	}
+	// for (int i = 0; i < reszta; ++i)
+	// {
+	// 	ramki.at(index).setWlasciciel(procesy.at(procesy.size()-1).getId());
+	// 	++index;
+	// }
 }
 
 void Pamiec::przydzialProporcjonalny()
@@ -180,15 +180,71 @@ void Pamiec::przydzialProporcjonalny()
 			++index;
 		}
 	});
-	int pozostale_ramki = ramki.size() - liczba_zajetych_ramek;
-	for (int i = 0; i < pozostale_ramki; ++i)
+	// int pozostale_ramki = ramki.size() - liczba_zajetych_ramek;
+	// for (int i = 0; i < pozostale_ramki; ++i)
+	// {
+	// 	ramki.at(index).setWlasciciel(procesy.at(procesy.size()-1).getId());
+	// 	++index;
+	// }
+}
+
+void Pamiec::przydzialWSS(std::vector<std::vector<unsigned>> WSS, int D, std::vector<Proces> procesy)
+{
+	int index = 0;
+	if (D <= ramki.size())
 	{
-		ramki.at(index).setWlasciciel(procesy.at(procesy.size()-1).getId());
-		++index;
+		for (Proces x : procesy)
+		{
+			for (int i = 0; i < WSS[x.getId()].size(); ++i)
+			{
+				ramki.at(index).setWlasciciel(x.getId());
+				++index;
+			}
+		}
+	}
+	else
+	{
+		int max = 0;
+		int index_max = 0;
+		for (int i = 0; i < WSS.size(); ++i)
+		{
+			if (WSS.at(i).size() > max)
+			{
+				max = WSS.at(i).size();
+				index_max = i;
+			}
+		}
+		WSS.erase(WSS.begin()+index_max);
+		auto match = std::find_if(procesy.begin(), procesy.end(), [&](Proces& proces)
+		{
+			return proces.getId() == index_max;
+		});
+		procesy.erase(match, procesy.end());
+
+		int index_local = 0;
+		int calkowita_liczba_strona = 0;
+		int liczba_zajetych_ramek = 0;
+		for_each(procesy.begin(), procesy.end(), [&](Proces& proces)
+		{
+			calkowita_liczba_strona += proces.getStrony().size();
+		});
+		for_each(procesy.begin(), procesy.end(), [&](Proces& proces)
+		{
+			double wspolczynnik = (double)proces.getStrony().size() / calkowita_liczba_strona;
+			int liczbaRamek = wspolczynnik * ramki.size();
+			if (liczbaRamek < 1)
+				liczbaRamek = 1;
+			liczba_zajetych_ramek += liczbaRamek;
+			for (int i = 0; i < liczbaRamek; ++i)
+			{
+				ramki.at(index).setWlasciciel(proces.getId());
+				++index_local;
+			}
+		});
 	}
 }
 
-void Pamiec::zabierzRamke(Proces proces)
+void Pamiec::zabierzRamke(Proces& proces)
 {
 	if (getIndeksyRamekProcesu(proces).size() <= 1)
 		return;
@@ -197,21 +253,27 @@ void Pamiec::zabierzRamke(Proces proces)
 		if (ramki.at(i).getWlasciciel() == proces.getId())
 		{
 			ramki.at(i).setWlasciciel(-1);
-			break;
+			return;
 		}
 	}
 }
 
-void Pamiec::oddajRamke(Proces proces)
+void Pamiec::oddajRamke(Proces& proces)
 {
 	for (int i = 0; i < ramki.size(); ++i)
 	{
 		if (ramki.at(i).getWlasciciel() == -1)
 		{
 			ramki.at(i).setWlasciciel(proces.getId());
-			break;
+			return;
 		}
 	}
+	for (int i = 0; i < ramki.size(); ++i)
+	{
+		if (ramki.at(i).getWlasciciel() == proces.getId())
+			ramki.at(i).setWlasciciel(-1);
+	}
+	proces.setHalted(true);
 }
 
 std::vector<int> Pamiec::getIndeksyRamekProcesu(Proces proces)

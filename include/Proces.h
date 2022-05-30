@@ -22,8 +22,11 @@ public:
 	std::vector<unsigned> getPastSeq();
 	std::vector<Strona> getStrony();
 	int getId() const;
+	bool isHalted() const;
+	void setHalted(bool);
 private:
 	int id;
+	bool halted;
 	std::vector<unsigned> sequence;
 	std::vector<Strona> strony;
 	std::vector<unsigned> past_sequence;

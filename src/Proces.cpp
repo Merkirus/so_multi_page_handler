@@ -10,6 +10,7 @@ Proces::Proces()
 {
 	this->id = count;
 	++count;
+	this->halted = false;
 }
 
 void Proces::generatePages(int n)
@@ -126,6 +127,16 @@ std::vector<Strona> Proces::getStrony()
 int Proces::getId() const
 {
 	return id;
+}
+
+bool Proces::isHalted() const
+{
+	return halted;
+}
+
+void Proces::setHalted(bool halted)
+{
+	this->halted = halted;
 }
 
 unsigned Proces::count = 0;

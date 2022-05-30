@@ -30,9 +30,9 @@ public:
 	/*Przydzialy ramek*/
 	void przydzialRowny();
 	void przydzialProporcjonalny();
-	void sterowanieCzestoscia(int liczba_bledow, int czas);
-	void zabierzRamke(Proces proces);
-	void oddajRamke(Proces proces);
+	void przydzialWSS(std::vector<std::vector<unsigned>> WSS, int D, std::vector<Proces> procesy);
+	void zabierzRamke(Proces& proces);
+	void oddajRamke(Proces& proces);
 	std::vector<int> getIndeksyRamekProcesu(Proces proces);
 private:
 	std::vector<Ramka> ramki;

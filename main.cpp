@@ -21,13 +21,13 @@ int main(int argc, char const *argv[])
 
 	/*Liczba stron dla procesu*/
 	p1.generatePages(2);
-	p2.generatePages(2);
+	p2.generatePages(4);
 	// p3.generatePages(5);
 	// p4.generatePages(5);
 
 	/*Sekwencja odwołań*/
-	p1.generateSeq(200);
-	p2.generateSeq(200);
+	p1.generateSeq(100);
+	p2.generateSeq(100);
 	// p3.generateSeq(200);
 	// p4.generateSeq(200);
 
@@ -42,9 +42,7 @@ int main(int argc, char const *argv[])
 		n += v.at(i).getSeq().size();
 
 
-	Pamiec pam{4, v};
-	pam.przydzialProporcjonalny();
-
+	Pamiec pam{3, v};
 
 	FIFO fifo{pam, p};
 
