@@ -132,7 +132,6 @@ void FIFO::runDyn(int n)
 			{
 				if (ppf[x.getId()] > GORNY_PROG_PPF)
 				{
-					std::cout << "HERE" << '\n';
 					pamiec.oddajRamke(x);
 				}
 				if (ppf[x.getId()] < DOLNY_PROG_PPF)
